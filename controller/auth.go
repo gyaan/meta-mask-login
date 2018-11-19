@@ -43,7 +43,7 @@ func Auth(s *r.Session) http.HandlerFunc {
 		// get the public address and signature and verify it
 		//get the user details and verify end provide the access token
 
-		msg:= []byte("I am signing my one-time nonce: 123x") //get this from db
+		msg:= []byte("I am signing my one-time nonce: "+user.Nonce) //get this from db
 
 		fromAddress:= common.HexToAddress(signature.PublicAddress)
 		sig:= hexutil.MustDecode(signature.Signature)
