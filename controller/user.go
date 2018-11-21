@@ -9,6 +9,8 @@ import (
 	r "gopkg.in/rethinkdb/rethinkdb-go.v5"
 
 	"math/rand"
+	"io"
+	"os"
 )
 
 func GetUserFiles(s * r.Session) http.HandlerFunc {
@@ -63,7 +65,8 @@ func CreateUser(s * r.Session) http.HandlerFunc {
 
 		user := models.User{}
 		json.NewDecoder(request.Body).Decode(&user)
-        user.Nonce = RandomString(7)
+		randomString := RandomString(7)
+		user.Nonce = randomString
 
         //first check if  user is there
 		cursor, err := r.DB("block_chain").Table("public_addresses").Filter(r.Row.Field("public_address").Eq(user.PublicAddress)).Run(s)
@@ -89,11 +92,12 @@ func CreateUser(s * r.Session) http.HandlerFunc {
 			//generate the new  nonce and update it to db and sent the user details
 			//existingUser.Nonce = RandomString(7)
 			filter:= map[string]interface{}{"public_address":existingUser.PublicAddress}
-			updateData := map[string]interface{}{"nonce":RandomString(7)}
+			updateData := map[string]interface{}{"nonce": randomString}
 			_, err := r.DB("block_chain").Table("public_addresses").Filter(filter).Update(updateData).RunWrite(s)
 			if err != nil{
 				fmt.Println(err)
 			}
+			existingUser.Nonce = randomString
 			user = existingUser
 		}
 
@@ -112,4 +116,23 @@ func RandomString(n int) string {
 		b[i] = letter[rand.Intn(len(letter))]
 	}
 	return string(b)
+}
+func UploadFile(s * r.Session) http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		request.ParseMultipartForm(32 << 20)
+		file, handler, err := request.FormFile("uploadfile")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer file.Close()
+		fmt.Fprintf(writer, "%v", handler.Header)
+		f, err := os.OpenFile("./"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer f.Close()
+		io.Copy(f, file)
+	}
 }

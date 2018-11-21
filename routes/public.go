@@ -22,6 +22,9 @@ func Public(s *r.Session, cors *cors.Cors) func(r chi.Router)  {
 		r.Options("/authenticate", func(writer http.ResponseWriter, request *http.Request) {
 			return
 		})
+		r.Options("/user", func(writer http.ResponseWriter, request *http.Request) {
+			return
+		})
 		r.Post("/authenticate",controller.Auth(s))
 	}
 }
