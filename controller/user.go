@@ -29,7 +29,6 @@ func GetUserDetails(s * r.Session) http.HandlerFunc {
 
 		cursor, err := r.DB("block_chain").Table("public_addresses").Filter(r.Row.Field("public_address").Eq(publicAddress)).Run(s)
 		if err != nil {
-			fmt.Println("I m here!!!");
 			writer.WriteHeader(http.StatusNotFound)
 			return
 		}
@@ -42,14 +41,7 @@ func GetUserDetails(s * r.Session) http.HandlerFunc {
 		fmt.Printf("%+v\n", user)
 
         if err == r.ErrEmptyResult {
-
-        	//todo put  flag for this
-			user.Nonce = "123x" //todo generate with some complex logic
-			user.PublicAddress = publicAddress
-			_, err := r.DB("block_chain").Table("public_addresses").Insert(user).RunWrite(s)
-			if err != nil{
-				fmt.Println(err)
-			}
+			writer.WriteHeader(http.StatusNotFound)
 		}
 
 		res, _ := json.Marshal(user)
