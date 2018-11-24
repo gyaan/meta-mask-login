@@ -25,7 +25,7 @@ func Auth(s *r.Session) http.HandlerFunc {
 
 		//first check if public address is there and get the nonce of the public address
 		//err := ss.DB(os.Getenv("DATABASE_NAME")).C("users").Find(bson.M{"public_address": signature.PublicAddress}).One(&user)
-		cursor, err := r.DB("block_chain").Table("public_addresses").Filter(r.Row.Field("public_address").Eq(signature.PublicAddress)).Run(s)
+		cursor, err := r.DB("test").Table("public_addresses").Filter(r.Row.Field("public_address").Eq(signature.PublicAddress)).Run(s)
 		if err!=nil{
 			writer.WriteHeader(http.StatusNotFound)
 			return

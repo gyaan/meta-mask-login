@@ -27,7 +27,7 @@ func GetUserDetails(s * r.Session) http.HandlerFunc {
 		publicAddress := chi.URLParam(request, "publicAddress")
 		fmt.Printf(publicAddress)
 
-		cursor, err := r.DB("block_chain").Table("public_addresses").Filter(r.Row.Field("public_address").Eq(publicAddress)).Run(s)
+		cursor, err := r.DB("test").Table("public_addresses").Filter(r.Row.Field("public_address").Eq(publicAddress)).Run(s)
 		if err != nil {
 			writer.WriteHeader(http.StatusNotFound)
 			return
@@ -61,7 +61,7 @@ func CreateUser(s * r.Session) http.HandlerFunc {
 		user.Nonce = randomString
 
         //first check if  user is there
-		cursor, err := r.DB("block_chain").Table("public_addresses").Filter(r.Row.Field("public_address").Eq(user.PublicAddress)).Run(s)
+		cursor, err := r.DB("test").Table("public_addresses").Filter(r.Row.Field("public_address").Eq(user.PublicAddress)).Run(s)
 		if err != nil {
 			writer.WriteHeader(http.StatusNotFound)
 			return
@@ -76,7 +76,7 @@ func CreateUser(s * r.Session) http.HandlerFunc {
 
 		if err == r.ErrEmptyResult {
 			//user.PublicAddress = publicAddress
-			_, err := r.DB("block_chain").Table("public_addresses").Insert(user).RunWrite(s)
+			_, err := r.DB("test").Table("public_addresses").Insert(user).RunWrite(s)
 			if err != nil{
 				fmt.Println(err)
 			}
@@ -85,7 +85,7 @@ func CreateUser(s * r.Session) http.HandlerFunc {
 			//existingUser.Nonce = RandomString(7)
 			filter:= map[string]interface{}{"public_address":existingUser.PublicAddress}
 			updateData := map[string]interface{}{"nonce": randomString}
-			_, err := r.DB("block_chain").Table("public_addresses").Filter(filter).Update(updateData).RunWrite(s)
+			_, err := r.DB("test").Table("public_addresses").Filter(filter).Update(updateData).RunWrite(s)
 			if err != nil{
 				fmt.Println(err)
 			}

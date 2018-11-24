@@ -44,7 +44,7 @@ var db *mgo.Database
 const collection = "users"
 
 func init() {
-	dbObj.Database = "block_chain"
+	dbObj.Database = "test"
 	dbObj.Server = "localhost"
 	dbObj.connect()
 }
