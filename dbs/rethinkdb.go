@@ -7,7 +7,7 @@ import (
 
 func GetRethinkSession() *r.Session {
 	session, err := r.Connect(r.ConnectOpts{
-		Address: "localhost:28015",
+		Address: "db:28015",
 	})
 	if err != nil {
 		log.Fatalln(err)
