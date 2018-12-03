@@ -1,16 +1,16 @@
 package main
 
 import (
-	"gopkg.in/mgo.v2"
-	"net/http"
-	"log"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	"gopkg.in/mgo.v2/bson"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/gorilla/mux"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+	"log"
+	"net/http"
 	"strings"
 )
 
@@ -60,8 +60,7 @@ func main() {
 
 	//r.HandleFunc("get-token",GetJwtToken).Methods("GET")
 
-	if err := http.ListenAndServe(":1335", r);
-		err != nil {
+	if err := http.ListenAndServe(":1335", r); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -109,7 +108,6 @@ func AuthenticateUser(writer http.ResponseWriter, request *http.Request) {
 	writer.WriteHeader(200)
 	writer.Write(response)
 }
-
 
 func createUser(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
@@ -179,8 +177,4 @@ func OptionRequestCros(writer http.ResponseWriter) {
 	writer.WriteHeader(204)
 }
 
-func GetJwtToken(writer http.ResponseWriter, requst http.Request) {
-
-
-
-}
+func GetJwtToken(writer http.ResponseWriter, requst http.Request) {}
